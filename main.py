@@ -7,7 +7,7 @@ import datetime
 from datetime import datetime
 import tkinter as tk
 
-BG = '#0d2b51'
+BG = '#1b2537'
 
 WINDOW = tk.Tk()
 WINDOW.configure(bg=BG)
@@ -61,7 +61,7 @@ class Lbl_Display:
             master=WINDOW,
             text='0.0 hrs',
             font='arial 24 bold',
-            bg='#244670',
+            bg='#222f46',
             fg=BG
         )
         self.lbl.grid(
@@ -91,7 +91,7 @@ class Hours_Calculator_Form:
             interval_delta = end_parsed - start_parsed
             total_hours = (interval_delta.seconds)/3600
 
-            self.lbl_display.lbl["text"] = f"{total_hours} hrs"
+            self.lbl_display.lbl["text"] = '{0:.2f} hrs'.format(total_hours)
 
         def __init__(
             self,
@@ -120,6 +120,8 @@ class Hours_Calculator_Form:
                 columnspan=2,
                 sticky="nesw"
             )
+
+            WINDOW.bind('<Return>', self.hours_calcualtor)
 
             self.ent_start = ent_start
             self.ent_end = ent_end
