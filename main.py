@@ -61,7 +61,7 @@ class Lbl_Display:
             master=WINDOW,
             text='0.0 hrs',
             font='arial 24 bold',
-            bg='#222f46',
+            bg='#8C929D',
             fg=BG
         )
         self.lbl.grid(
@@ -83,15 +83,17 @@ class Hours_Calculator_Form:
                 self.ent_start.ent.get(),
                 "%m/%d/%Y %H:%M"
             )
+            print(start_parsed)
             end_parsed = datetime.strptime(
                 self.ent_end.ent.get(),
                 "%m/%d/%Y %H:%M"
             )
-
             interval_delta = end_parsed - start_parsed
-            total_hours = (interval_delta.seconds)/3600
-
+            total_hours = (interval_delta.days * 24) + interval_delta.seconds / 3600
             self.lbl_display.lbl["text"] = '{0:.2f} hrs'.format(total_hours)
+
+        def calcualtor_caller(self, event):
+            self.hours_calcualtor()
 
         def __init__(
             self,
@@ -121,7 +123,7 @@ class Hours_Calculator_Form:
                 sticky="nesw"
             )
 
-            WINDOW.bind('<Return>', self.hours_calcualtor)
+            WINDOW.bind('<Return>', self.calcualtor_caller)
 
             self.ent_start = ent_start
             self.ent_end = ent_end
