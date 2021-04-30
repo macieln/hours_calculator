@@ -79,34 +79,61 @@ class Hours_Calculator_Form:
 
     class Btn_Calculator:
 
-        def hours_calcualtor(self):
-            start_parsed = datetime.strptime(
-                self.ent_start.ent.get(),
-                "%m/%d/%Y   %H:%M"
-            )
-            print(start_parsed)
-            end_parsed = datetime.strptime(
-                self.ent_end.ent.get(),
-                "%m/%d/%Y   %H:%M"
-            )
-            interval_delta = end_parsed - start_parsed
-            total_hours = (interval_delta.days * 24) + interval_delta.seconds / 3600
-            self.lbl_display.lbl["text"] = '{0:.2f} hrs'.format(total_hours)
+        def hours_calculator(self):
+            try:
+                start_parsed = datetime.strptime(
+                    self.ent_start.ent.get(),
+                    "%m/%d/%Y %H:%M"
+                )
+                end_parsed = datetime.strptime(
+                    self.ent_end.ent.get(),
+                    "%m/%d/%Y %H:%M"
+                )
+            except:
+                start_parsed = datetime.strptime(
+                    self.ent_start.ent.get(),
+                    "%m/%d/%y %H:%M"
+                )
+                end_parsed = datetime.strptime(
+                    self.ent_end.ent.get(),
+                    "%m/%d/%y %H:%M"
+                )
+                interval_delta = end_parsed - start_parsed
+                interval_delta = end_parsed - start_parsed
+                total_hours = (
+                    (interval_delta.days * 24)
+                    + interval_delta.seconds / 3600
+                )
+                self.lbl_display.lbl["text"] = (
+                    '{0:.2f} hrs'.format(total_hours)
+                )
+            else:
+                interval_delta = end_parsed - start_parsed
+                total_hours = (
+                    (interval_delta.days * 24)
+                    + interval_delta.seconds / 3600
+                )
+                self.lbl_display.lbl["text"] = (
+                    '{0:.2f} hrs'.format(total_hours)
+                )
 
         def calcualtor_caller(self, event):
-            self.hours_calcualtor()
+            self.hours_calculator()
 
-        def get_paste_interval(self, event):
-            input_start_interval = WINDOW.clipboard_get().split("\t")[0]
-            input_end_interval = WINDOW.clipboard_get().split("\t")[1]
+        def get_paste_intervals(self, event):
+            try:
+                input_start_interval = WINDOW.clipboard_get().split("\t")[0]
+                input_end_interval = WINDOW.clipboard_get().split("\t")[1]
+            except:
+                return
+            else:
+                self.ent_start.ent.delete(0, tk.END)
+                self.ent_end.ent.delete(0, tk.END)
 
-            self.ent_start.ent.delete(0, tk.END)
-            self.ent_end.ent.delete(0, tk.END)
+                self.ent_start.ent.insert(0, input_start_interval)
+                self.ent_end.ent.insert(0, input_end_interval)
 
-            self.ent_start.ent.insert(0, input_start_interval)
-            self.ent_end.ent.insert(0, input_end_interval)
-
-            self.hours_calcualtor()
+                self.hours_calculator()
 
         def __init__(
             self,
@@ -125,7 +152,7 @@ class Hours_Calculator_Form:
                 bg='#18ae94',
                 fg='#ffffff',
                 relief=tk.FLAT,
-                command=self.hours_calcualtor
+                command=self.hours_calculator
             )
             btn.grid(
                 row=row,
@@ -137,7 +164,7 @@ class Hours_Calculator_Form:
             )
 
             WINDOW.bind('<Return>', self.calcualtor_caller)
-            WINDOW.bind('<<Paste>>', self.get_paste_interval)
+            WINDOW.bind('<<Paste>>', self.get_paste_intervals)
             self.ent_start = ent_start
             self.ent_end = ent_end
 
